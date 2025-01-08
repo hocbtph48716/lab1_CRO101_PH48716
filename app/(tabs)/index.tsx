@@ -1,74 +1,59 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const players = [
+  { name: 'Messi', goals: 30 },
+  undefined,
+  { name: 'Ronaldo', goals: 28 },
+  { name: 'Neymar', goals: 22 },
+  { goals: 2 },
+  { name: 'Mbappé', goals: 25 },
+  { name: 'Pele', goals: null },
+];
 
-export default function HomeScreen() {
+const validRule = ({ name, goals } = {}) => !!name && typeof goals === 'number';
+
+const validPlayers = players.filter((player) => validRule(player));
+
+const topScorer = validPlayers.reduce(
+  (max, player) => (player.goals > max.goals ? player : max),
+  { name: '', goals: 0 }
+);
+
+const App = () => {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      <Text style={styles.text}>Bui Thai Hoc - PH48716</Text>
+
+      <Text style={styles.text}>Danh sách cầu thủ hợp lệ:</Text>
+      {validPlayers.map((player, index) => (
+        <Text key={index} style={styles.text}>
+          {player.name} - {player.goals} bàn
+        </Text>
+      ))}
+
+      <Text style={[styles.text, styles.highlight]}>
+        Cầu thủ ghi bàn nhiều nhất: {topScorer.name} - {topScorer.goals} bàn
+      </Text>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
+    backgroundColor: '#fff',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  text: {
+    fontSize: 18,
+    margin: 5,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  highlight: {
+    fontWeight: 'bold',
+    color: 'blue',
   },
 });
+
+export default App;
